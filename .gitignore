@@ -1,5 +1,6 @@
-# Env vars
+# dotenv
 .env
+.env.local
 
 # Logs
 logs
@@ -25,3 +26,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
