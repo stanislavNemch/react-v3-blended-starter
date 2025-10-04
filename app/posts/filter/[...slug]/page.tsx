@@ -5,8 +5,8 @@ import PostsClient from '../../Posts.client';
 
 // Визначаємо типи для пропсів, які отримує наша сторінка
 type Props = {
-  params: { slug: string[] }; // Динамічні параметри з URL, наприклад ['5'] або ['All']
-  searchParams: { [key: string]: string | string[] | undefined }; // Параметри запиту, наприклад ?page=2
+  params: Promise<{ slug: string[] }>; // Динамічні параметри з URL, наприклад ['5'] або ['All']
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>; // Параметри запиту, наприклад ?page=2
 };
 
 // Функція для генерації динамічних метаданих (SEO)

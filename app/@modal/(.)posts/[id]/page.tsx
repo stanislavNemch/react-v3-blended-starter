@@ -4,7 +4,7 @@ import { fetchPostById } from '@/lib/api';
 import PostPreviewClient from './PostPreview.client';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 export default async function PostModalPage({ params }: Props) {

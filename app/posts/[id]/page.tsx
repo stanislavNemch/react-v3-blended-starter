@@ -5,12 +5,13 @@ import { fetchPostById } from '@/lib/api';
 import PostDetailsClient from './PostDetails.client';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
 // Функція для генерації динамічних метаданих (SEO)
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const id = Number(params.id);
+  const resolvedParams = await params;
+  const id = Number(resolvedParams.id);
   // Отримуємо пост на сервері, щоб взяти з нього дані для метатегів
   const post = await fetchPostById(id);
 
@@ -24,7 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Серверний компонент сторінки
 export default async function PostPage({ params }: Props) {
-  const id = Number(params.id);
+  const resolvedParams = await params;
+  const id = Number(resolvedParams.id);
   const queryClient = new QueryClient();
 
   // Робимо попереднє завантаження даних поста
