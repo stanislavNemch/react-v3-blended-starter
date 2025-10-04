@@ -11,10 +11,9 @@ type Props = {
 
 // Функція для генерації динамічних метаданих (SEO)
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  // Отримуємо ID користувача з параметрів URL
-  const userId = params.slug[0];
+  const resolvedParams = await params;
+  const userId = resolvedParams.slug[0];
 
-  // Формуємо заголовок сторінки в залежності від того, чи вибраний конкретний користувач
   const title = userId === 'All' ? 'Posts - All Users' : `Posts - User ${userId}`;
 
   return {
@@ -24,14 +23,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 // Це наш головний компонент сторінки (Серверний Компонент)
 export default async function FilteredPostsPage({ params, searchParams }: Props) {
-  // Визначаємо ID користувача. Якщо в URL 'All', то userId буде undefined,
-  // і ми отримаємо пости всіх користувачів.
-  const userId = params.slug[0] === 'All' ? undefined : params.slug[0];
+  const resolvedParams = await params;
+  const resolvedSearchParams = await searchParams;
 
-  // Отримуємо поточну сторінку та текст пошуку з параметрів запиту.
-  // Якщо їх немає, використовуємо значення за замовчуванням.
-  const currentPage = Number(searchParams?.page) || 1;
-  const searchText = (searchParams?.q as string) || '';
+  const userId = resolvedParams.slug[0] === 'All' ? undefined : resolvedParams.slug[0];
+  const currentPage = Number(resolvedSearchParams?.page) || 1;
+  const searchText = (resolvedSearchParams?.q as string) || '';
 
   // Робимо запит на сервер для отримання постів (SSR).
   // Next.js дочекається виконання цього запиту перед відправкою сторінки клієнту.
@@ -42,5 +39,5 @@ export default async function FilteredPostsPage({ params, searchParams }: Props)
   });
 
   // Рендеримо клієнтський компонент і передаємо йому отримані дані як пропси.
-  return <PostsClient initialData={{ posts, totalCount }} userId={params.slug[0]} />;
+  return <PostsClient initialData={{ posts, totalCount }} userId={resolvedParams.slug[0]} />;
 }

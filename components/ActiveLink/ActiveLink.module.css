@@ -1,0 +1,16 @@
+.link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease-in-out;
+  color: #fff; /* Робимо текст білим */
+  text-decoration: none;
+}
+.link:hover {
+  background-color: #368a01; /* Стиль ховеру, як у menuLink */
+}
+.active {
+  /* Робимо активний стан таким же, як ховер, для консистентності */
+  background-color: #368a01;
+  font-weight: 600;
+}

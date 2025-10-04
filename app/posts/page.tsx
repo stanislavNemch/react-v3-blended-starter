@@ -1,5 +1,7 @@
-// import { fetchPosts } from '@/lib/api';
+import { redirect } from 'next/navigation';
 
-export default async function PostsPage() {
-  return <>Клієнтський компонент для сторінки постів</>;
+export default function PostsPage() {
+  // Робимо перенаправлення на сторінку з усіма постами
+  // щоб уникнути дублювання логіки
+  redirect('/posts/filter/All');
 }
