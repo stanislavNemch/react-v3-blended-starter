@@ -20,13 +20,20 @@ interface PostsClientProps {
 }
 
 export default function PostsClient({ initialData, userId }: PostsClientProps) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
+  // Отримуємо початкові значення з URL для синхронізації стану
+  const searchParams = new URLSearchParams(
+    typeof window !== 'undefined' ? window.location.search : ''
+  );
+  const initialPage = Number(searchParams.get('page')) || 1;
+  const initialSearch = searchParams.get('q') || '';
+
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editedPost, setEditedPost] = useState<Post | null>(null);
 
   const { data } = useQuery({
-    queryKey: ['posts', searchQuery, currentPage, userId],
+    queryKey: ['posts', searchQuery, currentPage, userId], // Ключ для кешування
     queryFn: () =>
       fetchPosts({
         searchText: searchQuery,
@@ -37,11 +44,13 @@ export default function PostsClient({ initialData, userId }: PostsClientProps) {
     initialData,
   });
 
-  const toggleModal = () => setIsModalOpen((prev) => !prev);
-
-  const toggleEditPost = (post: Post) => {
-    setEditedPost(post);
-    setIsModalOpen(true);
+  const handleOpenModal = (post?: Post) => {
+    if (post) {
+      setEditedPost(post); // Якщо є пост - це режим редагування
+    } else {
+      setEditedPost(null); // Інакше - режим створення
+    }
+    setIsModalOpen(true); // Відкриваємо модалку
   };
 
   const changeSearchQuery = useDebouncedCallback((newQuery: string) => {
@@ -57,7 +66,7 @@ export default function PostsClient({ initialData, userId }: PostsClientProps) {
       <main className={css.main}>
         <section className={css.postsSection}>
           <header className={css.toolbar}>
-            <SearchBox onSearch={changeSearchQuery} />
+            <SearchBox value={searchQuery} onSearch={changeSearchQuery} />
             {totalPages > 1 && (
               <Pagination
                 totalPages={totalPages}
@@ -66,33 +75,26 @@ export default function PostsClient({ initialData, userId }: PostsClientProps) {
               />
             )}
 
-            <button
-              className={css.button}
-              onClick={() => {
-                toggleModal();
-              }}
-            >
+            <button className={css.button} onClick={() => handleOpenModal()}>
               Create post +
             </button>
           </header>
-          {isModalOpen && (
-            <Modal onClose={toggleModal}>
+          {isModalOpen && ( // Рендеримо модалку, якщо isModalOpen === true
+            <Modal onClose={() => setIsModalOpen(false)}>
               {editedPost ? (
                 <EditPostForm
                   initialValues={editedPost}
                   onClose={() => {
-                    toggleModal();
+                    setIsModalOpen(false);
                     setEditedPost(null);
                   }}
                 />
               ) : (
-                <CreatePostForm onClose={toggleModal} />
+                <CreatePostForm onClose={() => setIsModalOpen(false)} />
               )}
             </Modal>
           )}
-          {posts.length > 0 && (
-            <PostList posts={posts} toggleModal={toggleModal} toggleEditPost={toggleEditPost} />
-          )}
+          {posts.length > 0 && <PostList posts={posts} onEdit={handleOpenModal} />}
         </section>
       </main>
     </div>

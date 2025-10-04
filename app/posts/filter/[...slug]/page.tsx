@@ -1,7 +1,7 @@
 // Імпортуємо необхідні типи та функції
 import { Metadata } from 'next';
 import { fetchPosts } from '@/lib/api';
-import PostsClient from '@/components/PostsClient/PostsClient';
+import PostsClient from '../../Posts.client';
 
 // Визначаємо типи для пропсів, які отримує наша сторінка
 type Props = {
@@ -42,5 +42,5 @@ export default async function FilteredPostsPage({ params, searchParams }: Props)
   });
 
   // Рендеримо клієнтський компонент і передаємо йому отримані дані як пропси.
-  return <PostsClient initialPosts={posts} totalCount={totalCount} userId={params.slug[0]} />;
+  return <PostsClient initialData={{ posts, totalCount }} userId={params.slug[0]} />;
 }

@@ -53,7 +53,12 @@ export const deletePost = async (postId: number) => {
   return response.data;
 };
 
-export const fetchPostById = async () => {};
+export const fetchPostById = async (id: number): Promise<Post> => {
+  // Робимо GET-запит для отримання конкретного поста за його ID
+  const response = await axios.get<Post>(`/posts/${id}`);
+  // Повертаємо дані поста
+  return response.data;
+};
 
 export const fetchUsers = async (): Promise<User[]> => {
   // Робимо GET-запит для отримання списку всіх користувачів
@@ -62,4 +67,9 @@ export const fetchUsers = async (): Promise<User[]> => {
   return response.data;
 };
 
-export const fetchUserById = async () => {};
+export const fetchUserById = async (userId: number): Promise<User> => {
+  // Робимо GET-запит для отримання конкретного користувача за його ID
+  const response = await axios.get<User>(`/users/${userId}`);
+  // Повертаємо дані користувача
+  return response.data;
+};

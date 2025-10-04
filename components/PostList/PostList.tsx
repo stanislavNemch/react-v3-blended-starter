@@ -7,11 +7,10 @@ import css from './PostList.module.css';
 
 interface PostListProps {
   posts: Post[];
-  toggleModal: (post: Post) => void;
-  toggleEditPost: (post: Post) => void;
+  onEdit: (post: Post) => void;
 }
 
-export default function PostList({ posts, toggleModal }: PostListProps) {
+export default function PostList({ posts, onEdit }: PostListProps) {
   const queryClient = useQueryClient();
   const mutation = useMutation({
     mutationFn: deletePost,
@@ -31,7 +30,7 @@ export default function PostList({ posts, toggleModal }: PostListProps) {
             <Link className={css.link} href={`/posts/${post.id}`} scroll={false}>
               View details
             </Link>{' '}
-            <button className={css.link} onClick={() => toggleModal(post)}>
+            <button className={css.link} onClick={() => onEdit(post)}>
               Edit
             </button>
             <button className={css.button} onClick={() => mutation.mutate(post.id)}>
