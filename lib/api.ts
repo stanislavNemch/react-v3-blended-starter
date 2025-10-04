@@ -55,6 +55,11 @@ export const deletePost = async (postId: number) => {
 
 export const fetchPostById = async () => {};
 
-export const fetchUsers = async () => {};
+export const fetchUsers = async (): Promise<User[]> => {
+  // Робимо GET-запит для отримання списку всіх користувачів
+  const response = await axios.get<User[]>('/users');
+  // Повертаємо дані з відповіді (масив користувачів)
+  return response.data;
+};
 
 export const fetchUserById = async () => {};
