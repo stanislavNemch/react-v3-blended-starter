@@ -20,6 +20,7 @@ export default function PostDetailsClient() {
     queryKey: ['post', id],
     queryFn: () => fetchPostById(id),
     enabled: !!id, // Запускати запит тільки якщо id існує
+    refetchOnMount: false,
   });
 
   // Запит для отримання даних автора
@@ -31,6 +32,7 @@ export default function PostDetailsClient() {
     queryKey: ['user', post?.userId],
     queryFn: () => fetchUserById(post!.userId),
     enabled: !!post?.userId, // Запускати запит тільки коли отримали ID автора
+    refetchOnMount: false,
   });
 
   if (isPostLoading) {
