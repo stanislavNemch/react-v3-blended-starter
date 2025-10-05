@@ -25,6 +25,7 @@ export default function PostPreviewClient() {
     queryKey: ['post', id],
     queryFn: () => fetchPostById(id),
     enabled: !!id,
+    refetchOnMount: false,
   });
 
   // Запит для отримання даних автора
@@ -36,6 +37,7 @@ export default function PostPreviewClient() {
     queryKey: ['user', post?.userId],
     queryFn: () => fetchUserById(post!.userId),
     enabled: !!post?.userId,
+    refetchOnMount: false,
   });
 
   const isLoading = isPostLoading || isUserLoading;
